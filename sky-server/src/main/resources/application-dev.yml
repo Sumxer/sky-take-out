@@ -6,3 +6,19 @@ sky:
     database: sky_take_out
     username: root
     password: qimiao123
+
+  alioss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    access-key-id: LTAI5tJQyc1XgDX5gJhzk7t6
+    access-key-secret: nDJMpdtYDDJTj7vdErSwacffqmlePY
+    bucket-name: sky-out-sumxer
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 123456
+    database: 10
+
+
+
+
