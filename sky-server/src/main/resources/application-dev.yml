@@ -20,8 +20,8 @@ sky:
     database: 10
 
   wechat:
-    appid: wxda4d6985006fd395
-    secret: 426bc327850ea8a376198075f23ff4ea
+    appid: test
+    secret: test
 
 
 
