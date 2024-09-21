@@ -10,9 +10,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -32,6 +34,10 @@ public class DishController {
     public Result save(@RequestBody DishDTO dishDTO){
         log.info("新增菜品:{}",dishDTO);
         dishSerivce.saveWithFlavor(dishDTO);
+
+        //清除缓存数据.在第一次插入的时候清空缓存数据，然后在后续调用的时候，就会直接从数据库加载出来。
+        String key = "dish_" + dishDTO.getCategoryId();
+        cleancache(key);
         return Result.success();
     }
 
@@ -58,6 +64,8 @@ public class DishController {
     public Result delete(@RequestParam List<Long> ids){
         log.info("菜品批量删除:{}", ids);
         dishSerivce.deleteBatch(ids);
+
+        cleancache("dish_*");
         return Result.success();
     }
 
@@ -79,6 +87,17 @@ public class DishController {
     public Result update(@RequestBody DishDTO dishDTO){
         log.info("修改菜品信息");
         dishSerivce.updateFlavor(dishDTO);
+        cleancache("dish_*");
         return Result.success();
+    }
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+    /**
+     * 清理缓存
+     */
+    private void cleancache(String pattern){
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
     }
 }
